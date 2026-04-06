@@ -3,6 +3,15 @@ import re
 import json
 import time
 import sys
+import datetime
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 
 def to_pine_color(rgba_str):
     if not rgba_str:
@@ -160,7 +169,9 @@ def process_chart(url, days, report_date=None):
         elif s['type'] == "Circle":
             center_ms = int((start_ms + end_ms) / 2)
             c_price = (t_price + b_price) / 2
-            pine_code.append(f"    label.new(x={center_ms}, y={c_price}, style=label.style_circle, color={bg_color}, size=size.normal, xloc=xloc.bar_time)")
+            dt_str = datetime.datetime.utcfromtimestamp(center_ms / 1000).strftime('%Y-%m-%d %H:%M UTC')
+            pine_code.append(f"    // Circle approximated as a label at {dt_str}")
+            pine_code.append(f"    label.new(x={center_ms}, y={c_price}, style=label.style_circle, color={bg_color}, size=size.normal, xloc=xloc.bar_time, tooltip='{dt_str}')")
 
     if len(unique_shapes) == 0:
         pine_code.append(f"    // No shapes found within {days} days")

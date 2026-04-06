@@ -1,5 +1,6 @@
 import json
 import re
+import datetime
 
 with open('kog_shapes_extracted_10days.json', 'r', encoding='utf-8') as f:
     shapes = json.load(f)
@@ -62,8 +63,9 @@ for i, s in enumerate(shapes):
         # "To approximate a circle over a time/price range, we will draw a label at the center."
         center_ms = int((start_ms + end_ms) / 2)
         center_price = (t_price + b_price) / 2
-        pine_code.append(f"    // Circle approximated as a label")
-        pine_code.append(f"    label.new(x={center_ms}, y={center_price}, style=label.style_circle, color={bg_color}, size=size.normal, xloc=xloc.bar_time)")
+        dt_str = datetime.datetime.utcfromtimestamp(center_ms / 1000).strftime('%Y-%m-%d %H:%M UTC')
+        pine_code.append(f"    // Circle approximated as a label at {dt_str}")
+        pine_code.append(f"    label.new(x={center_ms}, y={center_price}, style=label.style_circle, color={bg_color}, size=size.normal, xloc=xloc.bar_time, tooltip='{dt_str}')")
 
 with open('draw_shapes.pine', 'w', encoding='utf-8') as f:
     f.write('\n'.join(pine_code))
