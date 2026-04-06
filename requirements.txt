@@ -1,0 +1,12 @@
+# This project relies entirely on the Python Standard Library.
+# No external pip dependencies are required!
+#
+# Modules used natively:
+# - urllib
+# - re
+# - json
+# - time
+# - sys
+# - datetime
+#
+# You can just run the scripts on any server that has Python 3.x installed.

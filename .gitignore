@@ -1,0 +1,7 @@
+__pycache__/
+*.json
+*.html
+*.js
+*.txt
+!requirements.txt
+*.pine
